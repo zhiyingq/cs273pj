@@ -76,7 +76,7 @@ def load_train_data(df, valid_rate=0.1, is_df=True):
 def load_test_data(df, is_df=True):
 	if is_df:
 		return df
-	test_labels = [1 if x == POS_STR else 0 for x in df['income']]
+	test_labels = [1 if x == ' >50K.' else 0 for x in df['income']]
 	test_df = df.drop('income', axis=1)
 
 	return test_df.values, np.array(test_labels)
