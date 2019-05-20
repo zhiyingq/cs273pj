@@ -47,12 +47,12 @@ def load_all_data(train_file_path, test_file_path, valid_rate=0.1, is_df=True, n
 	test = dataset[train_val_len:]
 
 	if is_df:
-		train_df, valid_df = load_train_data(train_val, valid_rate, is_df, norm)
-		test_df = load_test_data(test, is_df, norm)
+		train_df, valid_df = load_train_data(train_val, valid_rate, is_df)
+		test_df = load_test_data(test, is_df)
 		return train_df, valid_df, test_df
 
-	train_X, train_Y, val_X, val_Y = load_train_data(train_val, valid_rate, is_df, norm)
-	test_X, test_Y = load_test_data(test, is_df, norm)
+	train_X, train_Y, val_X, val_Y = load_train_data(train_val, valid_rate, is_df)
+	test_X, test_Y = load_test_data(test, is_df)
 	return train_X, train_Y, val_X, val_Y, test_X, test_Y
 
 
