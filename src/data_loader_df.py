@@ -87,6 +87,8 @@ def normalize(df):
 	return df
 
 # visualize the TN/TP/FN/FP rate, return a dataframe
+# Y_true: the true label
+# Y_pred: the prediction
 def visualize_confusion_matrix(Y_true, Y_pred):
     cm = metrics.confusion_matrix(Y_true, Y_pred).astype(float)
     num_positive = np.sum(Y_true)
