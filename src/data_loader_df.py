@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn import preprocessing
+from sklearn import preprocessing, metrics
 
 POS_STR = ' >50K'
 COLUMNS = [
@@ -86,6 +86,26 @@ def normalize(df):
 	df.loc[:, COLS_TO_NORM] = preprocessing.StandardScaler().fit_transform(df[COLS_TO_NORM].values)
 	return df
 
+# visualize the TN/TP/FN/FP rate, return a dataframe
+def visualize_confusion_matrix(Y_true, Y_pred):
+    cm = metrics.confusion_matrix(Y_true, Y_pred).astype(float)
+    num_positive = np.sum(Y_true)
+    num_negative = len(Y_true) - num_positive
+    
+    cm[0][0] /= num_negative # true negative rete
+    cm[0][1] /= num_negative # false positive rate 
+    cm[1][0] /= num_positive # false negative rate
+    cm[1][1] /= num_positive # true positive rate
+    
+    df = pd.DataFrame(
+        cm,
+        index=["<= 50K", "> 50K"],
+        columns=["<= 50K", "> 50K"]
+    )
+    
+    df.index.names = ["Actual"]
+    df.columns.names = ["Predicted"]
+    return df
 
 
 
