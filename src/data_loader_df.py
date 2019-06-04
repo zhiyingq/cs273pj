@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing, metrics
+from data_loader import load_train_data, load_test_data
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -18,7 +19,7 @@ CATEGORICAL_COLS = [
 # load the data from train file
 # remove the rows with missing values
 def load_train_data_from_file(train_file_path):
-	df = pd.read_csv(train_file_path, header=None).sample(frac=1, random_state=11)
+	df, _ = load_train_data(train_file_path, 0)
 	df.replace(' ?', np.nan, inplace=True)
 	df = df.dropna()
 	return df
@@ -26,7 +27,7 @@ def load_train_data_from_file(train_file_path):
 # load the data from test file
 # remove the rows with missing values
 def load_test_data_from_file(test_file_path):
-	df = pd.read_csv(test_file_path, header=None, skiprows=1)
+	df = load_test_data(test_file_path)
 	df.replace(' ?', np.nan, inplace=True)
 	df = df.dropna()
 	return df
