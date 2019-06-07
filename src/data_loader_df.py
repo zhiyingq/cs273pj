@@ -4,6 +4,7 @@ from sklearn import preprocessing, metrics
 from data_loader import load_train_data, load_test_data
 import warnings
 warnings.filterwarnings("ignore")
+np.set_printoptions(suppress=True)
 
 POS_STR = ' >50K'
 COLUMNS = [
@@ -95,21 +96,30 @@ def split_train_data(df, valid_rate=0.1):
 # Y_true: the true label
 # Y_pred: the prediction
 def visualize_confusion_matrix(Y_true, Y_pred):
-    cm = metrics.confusion_matrix(Y_true, Y_pred).astype(float)
+    cm = metrics.confusion_matrix(Y_true, Y_pred).astype(int)
     num_positive = np.sum(Y_true)
     num_negative = len(Y_true) - num_positive
 
-    cm[0][0] /= num_negative # true negative rete
-    cm[0][1] /= num_negative # false positive rate
-    cm[1][0] /= num_positive # false negative rate
-    cm[1][1] /= num_positive # true positive rate
+    # cm[0][0] /= num_negative # true negative rete
+    # cm[0][1] /= num_negative # false positive rate
+    # cm[1][0] /= num_positive # false negative rate
+    # cm[1][1] /= num_positive # true positive rate
+
+    precision, recall, fscore, size = metrics.precision_recall_fscore_support(Y_true, Y_pred)
+    cm = np.concatenate((cm, size.reshape(2, 1)), axis=1)
+    cm = np.concatenate((cm, precision.reshape(2, 1)), axis=1)
+    cm = np.concatenate((cm, recall.reshape(2, 1)), axis=1)
+    cm = np.concatenate((cm, fscore.reshape(2, 1)), axis=1)
+
+
 
     df = pd.DataFrame(
         cm,
-        index=["<= 50K", "> 50K"],
-        columns=["<= 50K", "> 50K"]
+        index=["actual <= 50K", "actual > 50K"],
+        columns=["predicted <= 50K", "predicted > 50K", "#samples", "precision", "recall", "f-bata score"]
     )
 
-    df.index.names = ["Actual"]
-    df.columns.names = ["Predicted"]
+    df["predicted <= 50K"] = df["predicted <= 50K"].astype(int)
+    df["predicted > 50K"] = df["predicted > 50K"].astype(int)
+    df["#samples"] = df["#samples"].astype(int)
     return df
